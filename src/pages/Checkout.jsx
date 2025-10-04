@@ -1,8 +1,33 @@
+import { useState } from "react";
+import { checkoutCart } from "../api";
+import { useNavigate } from "react-router-dom";
+
 export default function Checkout() {
+    const [address, setAddress] = useState({ street:"", city:"", country:"", postalCode:"", phone:"" });
+    const nav = useNavigate();
+
+    const handlePlace = async (e) => {
+        e.preventDefault();
+        try {
+            await checkoutCart({ shippingAddress: address, paymentMethod: "COD" });
+            alert("Order placed! Check email.");
+            nav("/");
+        } catch (err) {
+            alert("Checkout failed");
+        }
+    };
+
     return (
         <div className="p-6 max-w-md mx-auto mt-10 border rounded shadow">
             <h1 className="text-2xl font-bold mb-4 text-center">Checkout</h1>
-            <p className="text-gray-700 text-center">Implement payment & order summary here.</p>
+            <form className="flex flex-col gap-2" onSubmit={handlePlace}>
+                <input value={address.street} onChange={e=>setAddress({...address,street:e.target.value})} placeholder="Street" className="border p-2 rounded" />
+                <input value={address.city} onChange={e=>setAddress({...address,city:e.target.value})} placeholder="City" className="border p-2 rounded" />
+                <input value={address.country} onChange={e=>setAddress({...address,country:e.target.value})} placeholder="Country" className="border p-2 rounded" />
+                <input value={address.postalCode} onChange={e=>setAddress({...address,postalCode:e.target.value})} placeholder="Postal Code" className="border p-2 rounded" />
+                <input value={address.phone} onChange={e=>setAddress({...address,phone:e.target.value})} placeholder="Phone" className="border p-2 rounded" />
+                <button type="submit" className="bg-green-600 text-white py-2 rounded mt-2">Place Order</button>
+            </form>
         </div>
     );
 }
