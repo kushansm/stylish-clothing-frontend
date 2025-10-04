@@ -1,5 +1,14 @@
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import Home from "./pages/Home.jsx";
+import Product from "./pages/Product.jsx";
+import Cart from "./pages/Cart.jsx";
+import Register from "./pages/Register.jsx";
+import Login from "./pages/Login.jsx";
+
+function Checkout() {
+    return null;
+}
 
 function App() {
     return (
@@ -11,7 +20,14 @@ function App() {
             </h1>
 
             <Routes>
-                {/* pages will go here */}
+                <Route path="/" element={<Home />} />
+                <Route path="/products" element={<Home />} />
+                <Route path="/products/:id" element={<Product />} />
+                <Route path="/cart" element={<Cart />} />
+                <Route path="/checkout" element={<Checkout />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+
             </Routes>
         </div>
     );
