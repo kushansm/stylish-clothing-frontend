@@ -9,27 +9,37 @@ export function Checkout() {
     const handlePlace = async (e) => {
         e.preventDefault();
 
-        // Get cart from localStorage
-        const cart = JSON.parse(localStorage.getItem("cart")) || [];
+        // Determine which cart to use
+        const token = localStorage.getItem("token");
+        const cart = JSON.parse(token ? localStorage.getItem("cart") || "[]" : localStorage.getItem("guest_cart") || "[]");
+
         if (cart.length === 0) return alert("Cart is empty!");
 
-        const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+        // Prepare items for backend
+        const items = cart.map(item => ({
+            product: item.product?._id || item._id, // handle guest and logged-in
+            size: item.size,
+            quantity: item.quantity,
+            price: item.product?.price || item.price || 0,
+        }));
+
+        const total = items.reduce((sum, i) => sum + i.price * i.quantity, 0);
 
         try {
             await API.post("/orders/checkout", {
-                items: cart.map(item => ({
-                    product: item._id,
-                    size: item.size,
-                    quantity: item.quantity,
-                    price: item.price,
-                })),
+                items,
                 total,
                 shippingAddress: address,
                 paymentMethod: "COD"
             });
+
             alert("Order placed! Check email.");
-            localStorage.removeItem("cart"); // clear cart
-            nav("/");
+
+            // Clear cart
+            if (token) localStorage.removeItem("cart");
+            else localStorage.removeItem("guest_cart");
+
+            nav("/"); // redirect home
         } catch (err) {
             console.error(err);
             alert("Checkout failed");
