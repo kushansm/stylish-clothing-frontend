@@ -5,10 +5,8 @@ import Product from "./pages/Product.jsx";
 import Cart from "./pages/Cart.jsx";
 import Register from "./pages/Register.jsx";
 import Login from "./pages/Login.jsx";
+import {Checkout} from "./pages/Checkout.jsx";
 
-function Checkout() {
-    return null;
-}
 
 function App() {
     return (

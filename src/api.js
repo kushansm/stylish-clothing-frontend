@@ -29,6 +29,6 @@ export const removeFromCart = (data) => API.delete("/cart/remove", { data });
 export const getCart = () => API.get("/cart");
 
 // Orders
-export const checkoutCart = () => API.post("/orders/checkout");
+export const checkoutCart = (data) => API.post("/orders/checkout", data);
 
 export default API;
