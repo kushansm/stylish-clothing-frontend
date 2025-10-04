@@ -1,5 +1,4 @@
-// src/context/UserContext.jsx
-import { createContext, useEffect, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import API from "../api";
 
 export const UserContext = createContext();
@@ -7,24 +6,16 @@ export const UserContext = createContext();
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
-    const loadUser = async () => {
-        const token = localStorage.getItem("token");
-        if (!token) {
-            setUser(null);
-            return;
-        }
-
-        try {
-            const res = await API.get("/auth/me"); // create a /me endpoint in backend to return logged-in user
-            setUser(res.data.user);
-        } catch (err) {
-            console.error(err);
-            setUser(null);
-        }
-    };
-
+    // Load user info from token/localStorage
     useEffect(() => {
-        loadUser();
+        const token = localStorage.getItem("token");
+        if (token) {
+            // Optionally, decode token to get user info
+            // For simplicity, assume backend returns user data in /auth/me
+            API.get("/auth/me")
+                .then(res => setUser(res.data))
+                .catch(() => setUser(null));
+        }
     }, []);
 
     const logout = () => {

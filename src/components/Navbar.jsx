@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { useContext } from "react";
-import { UserContext } from "../context/UserContext";
+import { UserContext } from "../context/UserContext.jsx";
 
 function Navbar() {
     const { user, logout } = useContext(UserContext);
@@ -17,10 +17,7 @@ function Navbar() {
                     <>
                         <li className="font-semibold">Hello, {user.name}</li>
                         <li>
-                            <button
-                                onClick={logout}
-                                className="bg-red-600 px-3 py-1 rounded hover:bg-red-500"
-                            >
+                            <button onClick={logout} className="hover:text-blue-400">
                                 Logout
                             </button>
                         </li>

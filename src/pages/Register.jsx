@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { registerUser } from "../api";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext.jsx";
 
 export default function Register() {
     const [name, setName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const { setUser } = useContext(UserContext);
     const nav = useNavigate();
 
     const handleRegister = async (e) => {
@@ -13,7 +15,13 @@ export default function Register() {
 
         try {
             const res = await registerUser({ name, email, password });
+
+            // Save token
             localStorage.setItem("token", res.data.token);
+
+            // Update user context
+            setUser(res.data.user);
+
             alert("Registration successful!");
             nav("/"); // redirect to home
         } catch (err) {

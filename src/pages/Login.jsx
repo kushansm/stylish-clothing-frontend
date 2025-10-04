@@ -1,10 +1,12 @@
-import { useState } from "react";
-import { loginUser } from "../api"; // your axios API wrapper
+import { useState, useContext } from "react";
+import { loginUser } from "../api";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext.jsx";
 
 export default function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const { setUser } = useContext(UserContext);
     const nav = useNavigate();
 
     const handleLogin = async (e) => {
@@ -12,8 +14,13 @@ export default function Login() {
 
         try {
             const res = await loginUser({ email, password });
-            // Save JWT token
+
+            // Save token
             localStorage.setItem("token", res.data.token);
+
+            // Update user context
+            setUser(res.data.user);
+
             alert("Login successful!");
             nav("/"); // redirect to home
         } catch (err) {
